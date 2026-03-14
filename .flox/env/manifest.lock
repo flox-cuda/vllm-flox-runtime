@@ -49,7 +49,7 @@
       "rev": "ca88e1655077dab1a0e8bc3583d98bb2575be501",
       "rev_count": 6,
       "rev_date": "2026-03-13T23:07:14Z",
-      "scrape_date": "2026-03-14T16:05:11.827558844Z",
+      "scrape_date": "2026-03-14T16:07:54.680937298Z",
       "stabilities": [
         "unstable",
         "staging",
@@ -68,36 +68,6 @@
       "priority": 5
     },
     {
-      "attr_path": "vllm-flox-runtime",
-      "broken": false,
-      "derivation": "/nix/store/9dmvwsq06c71psdnzi67c7vks0pxpf6h-vllm-flox-runtime-0.9.4.drv",
-      "description": "Runtime scripts for vLLM model serving with Flox",
-      "install_id": "vllm-flox-runtime",
-      "locked_url": "git@github.com:barstoolbluz/build-vllm-flox-runtime.git?rev=77ee4eb372f251ebaa54fda11c0a33ffc7457a52",
-      "name": "vllm-flox-runtime-0.9.4",
-      "pname": "vllm-flox-runtime",
-      "rev": "77ee4eb372f251ebaa54fda11c0a33ffc7457a52",
-      "rev_count": 11,
-      "rev_date": "2026-03-13T15:18:40Z",
-      "scrape_date": "2026-03-14T16:05:11.827565644Z",
-      "stabilities": [
-        "unstable",
-        "staging",
-        "stable"
-      ],
-      "unfree": false,
-      "version": "0.9.4",
-      "outputs_to_install": [
-        "out"
-      ],
-      "outputs": {
-        "out": "/nix/store/bzg8jn055dpvvk99l2s0bxa53fqk2yj3-vllm-flox-runtime-0.9.4"
-      },
-      "system": "x86_64-linux",
-      "group": "vllm-flox-runtime",
-      "priority": 5
-    },
-    {
       "attr_path": "python3Packages.vllm",
       "broken": false,
       "derivation": "/nix/store/2148pqyg9vbv408rg8wbwdahlqz814hj-python3.13-vllm-0.15.1.drv",
@@ -110,7 +80,7 @@
       "rev": "9dcb002ca1690658be4a04645215baea8b95f31d",
       "rev_count": 960399,
       "rev_date": "2026-03-08T09:52:19Z",
-      "scrape_date": "2026-03-14T16:05:48.487953307Z",
+      "scrape_date": "2026-03-14T16:07:54.680944930Z",
       "stabilities": [
         "unstable"
       ],
@@ -125,6 +95,36 @@
       },
       "system": "x86_64-linux",
       "group": "vllm",
+      "priority": 5
+    },
+    {
+      "attr_path": "vllm-flox-runtime",
+      "broken": false,
+      "derivation": "/nix/store/wngm4c4dnssm22b3bakknbk50y5kkfl3-vllm-flox-runtime-0.9.5.drv",
+      "description": "Runtime scripts for vLLM model serving with Flox",
+      "install_id": "vllm-flox-runtime",
+      "locked_url": "git@github.com:barstoolbluz/build-vllm-flox-runtime.git?rev=f9edcd88431b81d82958cc0775e1e4fb275aab83",
+      "name": "vllm-flox-runtime-0.9.5",
+      "pname": "vllm-flox-runtime",
+      "rev": "f9edcd88431b81d82958cc0775e1e4fb275aab83",
+      "rev_count": 12,
+      "rev_date": "2026-03-14T16:07:32Z",
+      "scrape_date": "2026-03-14T16:07:54.680948004Z",
+      "stabilities": [
+        "unstable",
+        "staging",
+        "stable"
+      ],
+      "unfree": false,
+      "version": "0.9.5",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/8x73x8saa2c4f9zps4q2jvdjbjacv1hc-vllm-flox-runtime-0.9.5"
+      },
+      "system": "x86_64-linux",
+      "group": "vllm-flox-runtime",
       "priority": 5
     }
   ]
