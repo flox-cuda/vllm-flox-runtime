@@ -145,9 +145,9 @@ curl http://127.0.0.1:8000/v1/completions \
 
 Settings are split between a static config file and runtime environment variables.
 
-### Static settings (`config.yaml`)
+### Static settings (`vllm-config.yaml`)
 
-These settings are read by `vllm-serve` and passed directly to `vllm serve` via `--config`. `host` and `port` are overridden by the `VLLM_HOST`/`VLLM_PORT` env vars (passed as CLI args, which take precedence over config file values).
+A default config is bundled in the `vllm-flox-runtime` package and auto-copied to `$FLOX_ENV_CACHE/vllm-config.yaml` on first run. Edit that copy to customize. These settings are read by `vllm-serve` and passed directly to `vllm serve` via `--config`. `host` and `port` are overridden by the `VLLM_HOST`/`VLLM_PORT` env vars (passed as CLI args, which take precedence over config file values).
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
@@ -413,7 +413,7 @@ vllm-serve -- --extra-flag val       # pass extra args through to vllm serve
 
 | Variable | Validation | Description |
 |----------|------------|-------------|
-| `FLOX_ENV_PROJECT` | Must be a directory | Project root (for `config.yaml`). Not required if `VLLM_CONFIG_FILE` is set |
+| `FLOX_ENV_CACHE` | Must be a directory | Cache directory (for default `vllm-config.yaml`). Not required if `VLLM_CONFIG_FILE` is set |
 | `VLLM_HOST` | Non-empty | Server bind address |
 | `VLLM_PORT` | Positive integer | Server listen port |
 | `VLLM_TENSOR_PARALLEL_SIZE` | Positive integer | Tensor parallelism GPU count |
@@ -436,7 +436,7 @@ vllm-serve -- --extra-flag val       # pass extra args through to vllm serve
 |----------|---------|-------------|
 | `VLLM_MODEL_ENV_FILE` | Derived from `FLOX_ENV_CACHE` + model ID | Explicit env file path. Bypasses the standard derivation |
 | `VLLM_PREFIX_CACHING` | `false` | Enable automatic prefix caching. Accepts `true`/`false`/`1`/`0`/`yes`/`no` |
-| `VLLM_CONFIG_FILE` | `$FLOX_ENV_PROJECT/config.yaml` | Override config file path |
+| `VLLM_CONFIG_FILE` | `$FLOX_ENV_CACHE/vllm-config.yaml` | Override config file path. Default is auto-copied from the package on first run |
 | `VLLM_ENV_FILE_TRUSTED` | `false` | Skip safe-mode env file parsing and `source` the file directly. Accepts `true`/`false`/`1`/`0`/`yes`/`no` |
 
 ### Env file loading
@@ -480,7 +480,7 @@ The env var to vLLM CLI flag mapping:
 | Env var | CLI flag |
 |---------|----------|
 | `_VLLM_RESOLVED_MODEL` | positional (model argument) |
-| `VLLM_CONFIG_FILE` or `$FLOX_ENV_PROJECT/config.yaml` | `--config` |
+| `VLLM_CONFIG_FILE` or `$FLOX_ENV_CACHE/vllm-config.yaml` | `--config` |
 | `VLLM_HOST` | `--host` |
 | `VLLM_PORT` | `--port` |
 | `VLLM_TENSOR_PARALLEL_SIZE` | `--tensor-parallel-size` |
@@ -494,8 +494,9 @@ The env var to vLLM CLI flag mapping:
 ### Config file resolution
 
 1. If `VLLM_CONFIG_FILE` is set, use that path.
-2. Otherwise, use `$FLOX_ENV_PROJECT/config.yaml`.
-3. The file must exist and be readable, or `vllm-serve` exits with an error.
+2. Otherwise, use `$FLOX_ENV_CACHE/vllm-config.yaml`.
+3. If that file doesn't exist, the default config bundled in the package (`<pkg-root>/share/vllm-flox-runtime/config.yaml`) is auto-copied there on first run.
+4. The file must exist and be readable, or `vllm-serve` exits with an error.
 
 ## Multi-GPU
 
@@ -622,7 +623,7 @@ Ensure you've accepted the model's license on the HuggingFace website.
 
 Reduce memory pressure:
 
-1. Lower `gpu-memory-utilization` in `config.yaml` (e.g., `0.85`).
+1. Lower `gpu-memory-utilization` in `.flox/cache/vllm-config.yaml` (e.g., `0.85`).
 2. Reduce `VLLM_MAX_MODEL_LEN` (e.g., `2048`).
 3. Use `VLLM_KV_CACHE_DTYPE=fp8` to halve KV cache memory.
 4. Increase tensor parallelism to spread the model across GPUs.
@@ -681,12 +682,12 @@ VLLM_LOGGING_LEVEL=DEBUG flox activate --start-services
 ```
 vllm-runtime/
   .flox/env/manifest.toml   # Flox manifest (packages, on-activate hook, service)
-  config.yaml                # vLLM static server config (gpu-memory-utilization, dtype, etc.)
+  .flox/cache/vllm-config.yaml  # vLLM server config (auto-copied from package on first run)
   models/                    # Model cache (created on activation)
   README.md                  # This file
 ```
 
-Scripts (`vllm-preflight`, `vllm-resolve-model`, `vllm-serve`) are provided by the `flox/vllm-flox-runtime` package and available on `PATH` after activation. They are not stored in this directory.
+Scripts (`vllm-preflight`, `vllm-resolve-model`, `vllm-serve`) are provided by the `flox/vllm-flox-runtime` package and available on `PATH` after activation. They are not stored in this directory. The default `config.yaml` (gpu-memory-utilization, dtype, logging) is bundled in the package and auto-copied to `.flox/cache/vllm-config.yaml` on first run — edit that copy to customize.
 
 ## Security notes
 
