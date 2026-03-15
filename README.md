@@ -46,44 +46,21 @@ curl http://127.0.0.1:8000/v1/chat/completions \
 
 The `examples/` directory contains self-contained demo scripts that start a vLLM server, run smoke tests (health, models, completions, chat), and shut down cleanly.
 
-### Flox-bundled model (no download required)
+### Default model (Phi-4-mini-instruct)
 
 ```bash
-flox activate -- ./examples/demo-flox-model.sh
+flox activate -- ./examples/demo-phi-4-mini-instruct.sh
 ```
 
-Serves `microsoft/Phi-4-mini-instruct-FP8-TORCHAO` from the flox package. No network access or local model download needed — the model is installed as a flox package and resolved via the `flox` source.
-
-### HuggingFace cache models
-
-These demos serve models from `~/.cache/huggingface/hub/`. Download the models first if they're not already cached:
-
-```bash
-# Download models (one-time)
-pip install huggingface-hub
-huggingface-cli download google/gemma-3-4b-it
-huggingface-cli download mistralai/Ministral-3-3B-Instruct-2512
-```
-
-Then run:
-
-```bash
-# Google Gemma 3 4B IT (~8 GB VRAM)
-flox activate -- ./examples/demo-gemma3-4b.sh
-
-# Mistral Ministral 3B Instruct (~9 GB VRAM)
-flox activate -- ./examples/demo-ministral-3b.sh
-```
+Serves `microsoft/Phi-4-mini-instruct` (~8 GB VRAM). The model is downloaded from GitHub Releases on first `flox activate` and resolved via the `local` source. No HuggingFace account or token required.
 
 ### Customizing demos
 
-All demos accept `VLLM_PORT` to override the default port:
+Override the default port:
 
 ```bash
-VLLM_PORT=8800 flox activate -- ./examples/demo-gemma3-4b.sh
+VLLM_PORT=8800 flox activate -- ./examples/demo-phi-4-mini-instruct.sh
 ```
-
-To adapt a demo for a different model, copy one of the HF cache scripts and change `VLLM_MODEL`, `VLLM_MODEL_ORG`, and the VRAM estimate in the header.
 
 ## Architecture
 
@@ -286,7 +263,7 @@ Sources are tried in the order specified by `VLLM_MODEL_SOURCES`. The script's i
 | `VLLM_RESOLVE_LOCK_TIMEOUT` | `300` | Seconds to wait for the per-model lock |
 | `VLLM_SKIP_TOKENIZER_CHECK` | `0` | Set to `1` to skip tokenizer asset validation |
 | `VLLM_KEEP_LOGS` | `0` | Set to `1` to keep download logs even on success. Logs are always kept on failure |
-| `HF_TOKEN` | _(none)_ | HuggingFace token for gated model access (Llama, Gemma, etc.) |
+| `HF_TOKEN` | _(none)_ | HuggingFace token for gated model access |
 
 ### Model validation
 
@@ -322,7 +299,7 @@ The `<slug>` is the model ID with unsafe characters mapped to `-`. The `<hash12>
 
 ### Gated models
 
-Models that require authentication (Llama, Gemma, Mistral) need a HuggingFace token:
+Gated models that require authentication need a HuggingFace token:
 
 ```bash
 HF_TOKEN=hf_... flox activate --start-services
@@ -654,7 +631,7 @@ VLLM_SKIP_GPU_CHECK=1 flox activate --start-services
 
 ### Gated model 401
 
-Gated models (Llama, Gemma, Mistral) require a HuggingFace token:
+Gated models require a HuggingFace token:
 
 ```bash
 HF_TOKEN=hf_... flox activate --start-services

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# demo-flox-model.sh — Serve the locally downloaded model.
+# demo-phi-4-mini-instruct.sh — Serve the locally downloaded model.
 #
 # The Phi-4-mini-instruct model is downloaded from GitHub Releases
 # on first activation and resolved via the "local" source in
 # vllm-resolve-model. No HuggingFace account or token required.
 #
 # Usage:
-#   flox activate -- ./examples/demo-flox-model.sh
+#   flox activate -- ./examples/demo-phi-4-mini-instruct.sh
 #
 # Prerequisites:
 #   - flox activate (provides vllm, vllm-serve, and the downloaded model)
