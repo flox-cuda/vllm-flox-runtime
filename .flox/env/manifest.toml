@@ -72,6 +72,24 @@ on-activate = '''
   mkdir -p "$VLLM_MODELS_DIR"
   mkdir -p "$PROMETHEUS_MULTIPROC_DIR"
 
+  # ── Ensure vllm config has compilation disabled (nvcc not on PATH) ──
+  _vllm_config="$FLOX_ENV_CACHE/vllm-config.yaml"
+  if [[ ! -f "$_vllm_config" ]]; then
+    cat > "$_vllm_config" <<'VLLM_YAML'
+host: "0.0.0.0"
+port: 8000
+
+dtype: auto
+gpu-memory-utilization: 0.92
+compilation-config: '{"level": 0}'
+
+disable-log-requests: true
+uvicorn-log-level: "warning"
+VLLM_YAML
+  elif ! grep -q 'compilation-config' "$_vllm_config"; then
+    printf '\ncompilation-config: '\''{"level": 0}'\''\n' >> "$_vllm_config"
+  fi
+
   # ── Download default model from GitHub Releases (first activation) ──
   _gh_release_model_download() {
     local _default_model="Phi-4-mini-instruct"
